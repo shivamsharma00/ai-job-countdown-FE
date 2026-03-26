@@ -1,0 +1,497 @@
+.clockCard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 40px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--green), var(--yellow), var(--orange), var(--red));
+}
+
+/* Horizontal layout: ring left, info right */
+.clockLayout {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+}
+.clockLeft {
+  flex-shrink: 0;
+}
+.clockRight {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+}
+
+@media (max-width: 800px) {
+  .clockLayout {
+    flex-direction: column;
+    gap: 24px;
+    text-align: center;
+  }
+  .clockRight {
+    text-align: center;
+    width: 100%;
+  }
+}
+
+.jobTitle {
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+.jobContext {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-bottom: 20px;
+}
+.clockContainer {
+  position: relative;
+  width: 240px;
+  height: 240px;
+}
+.clockCenter {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+.countdownNum {
+  font-family: "Instrument Serif", serif;
+  font-size: 60px;
+  line-height: 1;
+  letter-spacing: -2px;
+}
+.countdownUnit {
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+.riskBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  border-radius: 100px;
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.riskDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  animation: blink 1.5s infinite;
+}
+.clockDesc {
+  font-size: 14px;
+  color: var(--text-dim);
+  max-width: 520px;
+  margin: 0;
+  line-height: 1.7;
+}
+
+/* Calendar CTA */
+.calCta {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 32px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.calIcon {
+  width: 52px;
+  height: 52px;
+  background: var(--accent-soft);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+.calInfo {
+  flex: 1;
+}
+.calInfo h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.calInfo p {
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+.calBtn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 12px 22px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: "DM Sans", sans-serif;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+.calBtn:hover {
+  box-shadow: 0 8px 24px rgba(255, 61, 0, 0.3);
+  transform: translateY(-1px);
+}
+.calBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+.calDone {
+  background: var(--green) !important;
+}
+
+/* Two-column grid for factors + tips */
+.twoCol {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+  align-items: start;
+}
+
+@media (max-width: 800px) {
+  .twoCol {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Cards */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  margin-bottom: 0;
+}
+.cardTitle {
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 24px;
+}
+
+/* Factors */
+.factor {
+  margin-bottom: 20px;
+}
+.factor:last-child {
+  margin-bottom: 0;
+}
+.factorHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.factorName {
+  font-size: 13px;
+  font-weight: 500;
+}
+.factorVal {
+  font-family: "Space Mono", monospace;
+  font-size: 12px;
+}
+.factorTrack {
+  height: 5px;
+  background: var(--surface-2);
+  border-radius: 100px;
+  overflow: hidden;
+}
+.factorFill {
+  height: 100%;
+  border-radius: 100px;
+  transition: width 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Tips */
+.tipRow {
+  display: flex;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+.tipRow:last-child {
+  border-bottom: none;
+}
+.tipIco {
+  width: 34px;
+  height: 34px;
+  background: var(--accent-soft);
+  border-radius: var(--radius-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+.tipBody {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+.tipBody strong {
+  color: var(--text);
+  font-weight: 500;
+}
+
+/* Feed */
+.feedCard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  margin-bottom: 24px;
+}
+.feedTabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 24px;
+  background: var(--surface-2);
+  border-radius: 100px;
+  padding: 3px;
+}
+.feedTab {
+  flex: 1;
+  padding: 10px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-dim);
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  background: transparent;
+  font-family: "DM Sans", sans-serif;
+}
+.feedTabActive {
+  background: var(--surface) !important;
+  color: var(--text) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+.feedList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.feedItem {
+  display: flex;
+  gap: 14px;
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  transition: background 0.15s ease;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+.feedItem:hover {
+  background: var(--surface-2);
+}
+.feedItemIcon {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.news {
+  background: var(--blue-soft);
+}
+.tweet {
+  background: var(--surface-3);
+}
+.research {
+  background: var(--green-soft);
+}
+.feedItemBody {
+  flex: 1;
+  min-width: 0;
+}
+.feedItemTitle {
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.feedItemMeta {
+  font-size: 11px;
+  color: var(--text-dim);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.source {
+  font-weight: 600;
+}
+.feedItemTag {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 100px;
+  background: var(--surface-3);
+  color: var(--text-dim);
+  font-family: "Space Mono", monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.feedLoading {
+  text-align: center;
+  padding: 32px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.miniSpin {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--surface-3);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin: 0 auto 12px;
+}
+.feedEmpty {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-dim);
+  font-size: 13px;
+}
+
+/* Share / Restart */
+.shareBtn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 16px 36px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: "DM Sans", sans-serif;
+  transition: all 0.25s ease;
+}
+.shareBtn:hover {
+  box-shadow: 0 12px 40px rgba(255, 61, 0, 0.3);
+  transform: translateY(-2px);
+}
+.restartLink {
+  display: inline-block;
+  margin-top: 18px;
+  font-size: 12px;
+  color: var(--text-dim);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.restartLink:hover {
+  color: var(--text);
+}
+.disclaimer {
+  text-align: center;
+  font-size: 10px;
+  color: var(--text-dim);
+  opacity: 0.5;
+  margin-top: 28px;
+  font-family: "Space Mono", monospace;
+  line-height: 1.7;
+}
+
+@media (max-width: 640px) {
+  .clockCard,
+  .card,
+  .feedCard {
+    padding: 24px 18px;
+  }
+  .calCta {
+    flex-direction: column;
+    text-align: center;
+  }
+  .calBtn {
+    width: 100%;
+  }
+}
+
+/* ── Live countdown ── */
+.liveCountdown {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  margin: 20px 0 10px;
+}
+
+@media (max-width: 800px) {
+  .liveCountdown {
+    justify-content: center;
+  }
+}
+
+.liveUnit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 52px;
+}
+
+.liveVal {
+  font-size: 36px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  font-family: "Space Mono", monospace;
+}
+
+.liveLabel {
+  font-size: 9px;
+  color: var(--text-2);
+  margin-top: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.yearsMonths {
+  font-family: "Instrument Serif", serif;
+  font-size: 22px;
+  letter-spacing: -0.5px;
+  margin: 2px 0 16px;
+  opacity: 0.9;
+}

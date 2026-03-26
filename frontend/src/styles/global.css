@@ -1,0 +1,107 @@
+:root {
+  --bg: #08080a;
+  --surface: #0f0f13;
+  --surface-2: #17171d;
+  --surface-3: #1e1e26;
+  --border: #25252f;
+  --border-focus: #3a3a48;
+  --text: #ededea;
+  --text-dim: #6e6d78;
+  --text-mid: #9a99a5;
+  --accent: #ff3d00;
+  --accent-soft: rgba(255, 61, 0, 0.1);
+  --accent-glow: rgba(255, 61, 0, 0.15);
+  --green: #00e676;
+  --green-soft: rgba(0, 230, 118, 0.1);
+  --yellow: #ffd600;
+  --yellow-soft: rgba(255, 214, 0, 0.1);
+  --red: #ff1744;
+  --red-soft: rgba(255, 23, 68, 0.1);
+  --orange: #ff9100;
+  --orange-soft: rgba(255, 145, 0, 0.1);
+  --blue: #448aff;
+  --blue-soft: rgba(68, 138, 255, 0.1);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --radius-xs: 6px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "DM Sans", sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Grain overlay */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.grid-bg {
+  position: fixed;
+  inset: 0;
+  background-image: linear-gradient(
+      rgba(255, 61, 0, 0.02) 1px,
+      transparent 1px
+    ),
+    linear-gradient(90deg, rgba(255, 61, 0, 0.02) 1px, transparent 1px);
+  background-size: 50px 50px;
+  z-index: 0;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 20px 120px;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.15;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes tickerAnim {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
