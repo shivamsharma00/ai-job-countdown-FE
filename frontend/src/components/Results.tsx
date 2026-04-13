@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import type { EstimateResponse, UserProfile, DataSources, OccupationMatch } from "../types";
+import type { EstimateResponse, UserProfile } from "../types";
 import styles from "./Results.module.css";
 
 /* ── colour helpers ── */
