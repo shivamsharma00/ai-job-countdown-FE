@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import type { UserProfile, EstimateResponse, FeedResponse } from "./types";
-import { fetchEstimate, fetchFeed, fetchHealth } from "./api/client";
+import type { UserProfile, EstimateResponse } from "./types";
+import { fetchEstimate, fetchHealth } from "./api/client";
 import Header from "./components/Header";
 import ProgressBar from "./components/ProgressBar";
 import IntakeForm from "./components/IntakeForm";
@@ -24,8 +24,6 @@ const App: React.FC = () => {
   }, [checkBackend]);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [estimate, setEstimate] = useState<EstimateResponse | null>(null);
-  const [feed, setFeed] = useState<FeedResponse | null>(null);
-  const [feedLoading, setFeedLoading] = useState(false);
   const [estimateLoading, setEstimateLoading] = useState(false);
   const [estimateError, setEstimateError] = useState<string | null>(null);
 
@@ -61,18 +59,8 @@ const App: React.FC = () => {
       if (timedOutRef.current) return;
 
       setEstimate(est);
+      setEstimateLoading(false);
       setView("results");
-
-      setFeedLoading(true);
-      fetchFeed({
-        role: p.role,
-        location: p.location,
-        company_size: p.companySize,
-        tasks: p.tasks,
-      })
-        .then((f) => setFeed(f))
-        .catch((err) => console.error("Feed error:", err))
-        .finally(() => setFeedLoading(false));
     } catch (err: unknown) {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
       if (!timedOutRef.current) {
@@ -93,7 +81,6 @@ const App: React.FC = () => {
     setCurrentStep(0);
     setProfile(null);
     setEstimate(null);
-    setFeed(null);
     setEstimateError(null);
     setEstimateLoading(false);
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -122,8 +109,6 @@ const App: React.FC = () => {
           <Results
             profile={profile}
             estimate={estimate}
-            feed={feed}
-            feedLoading={feedLoading}
             onRestart={handleRestart}
           />
         )}

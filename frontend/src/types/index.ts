@@ -47,12 +47,37 @@ export interface Tip {
   text: string;
 }
 
+export interface OccupationMatch {
+  soc_code: string;
+  title: string;
+  matched: boolean;
+}
+
+export interface DataSources {
+  eloundou_alpha: number | null;
+  eloundou_beta: number | null;
+  eloundou_score: number;
+  eloundou_available: boolean;
+  aioe_raw: number | null;
+  aioe_normalized: number;
+  aioe_available: boolean;
+  task_exposure: number | null;
+  tasks_analyzed: number;
+  company_modifier: number;
+  ai_usage_modifier: number;
+  bls_employment_national: number | null;
+  bls_median_wage_national: number | null;
+  final_exposure: number;
+}
+
 export interface EstimateResponse {
   years: number;
   risk: string;
   description: string;
   factors: Factor[];
   tips: Tip[];
+  occupation?: OccupationMatch | null;
+  data_sources?: DataSources | null;
 }
 
 export interface FeedItem {

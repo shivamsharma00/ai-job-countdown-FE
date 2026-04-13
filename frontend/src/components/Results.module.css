@@ -396,6 +396,165 @@
   font-size: 13px;
 }
 
+/* ── Data Sources & Methodology ── */
+.methodCard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  margin-bottom: 24px;
+}
+
+.methodIntro {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.6;
+  margin: 0 0 24px;
+}
+
+.methodOcc {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.methodOccLabel {
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.methodOccTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+.methodOccSoc {
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+}
+
+.methodGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 800px) {
+  .methodGrid { grid-template-columns: 1fr; }
+}
+
+.methodItem {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 18px;
+}
+
+.methodItemHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  gap: 8px;
+}
+
+.methodSource {
+  font-family: "Space Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.methodBadge {
+  font-family: "Space Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 100px;
+  white-space: nowrap;
+}
+
+.methodLabel {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+
+.methodValue {
+  font-family: "Space Mono", monospace;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.methodUnit {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-dim);
+}
+
+.methodFormula {
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+  word-break: break-all;
+}
+
+.methodDesc {
+  font-size: 11px;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+.methodFormulaBox {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 18px 20px;
+  margin-bottom: 20px;
+}
+
+.methodFormulaTitle {
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 10px;
+}
+
+.methodFormulaBody {
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  line-height: 1.8;
+  word-break: break-word;
+}
+
+.methodCitation {
+  font-size: 10px;
+  color: var(--text-dim);
+  opacity: 0.6;
+  font-family: "Space Mono", monospace;
+  line-height: 1.6;
+}
+
 /* Share / Restart */
 .shareBtn {
   background: var(--accent);
@@ -426,13 +585,44 @@
   color: var(--text);
 }
 .disclaimer {
-  text-align: center;
-  font-size: 10px;
-  color: var(--text-dim);
-  opacity: 0.5;
-  margin-top: 28px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 32px;
+  margin-top: 8px;
+  margin-bottom: 40px;
+}
+
+.disclaimerTitle {
   font-family: "Space Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+}
+
+.disclaimer p {
+  font-size: 11px;
+  color: var(--text-dim);
   line-height: 1.7;
+  margin: 0 0 10px;
+}
+
+.disclaimer p:last-child {
+  margin-bottom: 0;
+}
+
+.disclaimer strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.disclaimerFine {
+  font-family: "Space Mono", monospace;
+  font-size: 9px !important;
+  opacity: 0.6;
+  line-height: 1.6 !important;
 }
 
 @media (max-width: 640px) {
