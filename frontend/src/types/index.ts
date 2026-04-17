@@ -56,6 +56,7 @@ export interface OccupationMatch {
 export interface DataSources {
   eloundou_alpha: number | null;
   eloundou_beta: number | null;
+  eloundou_gamma: number | null;
   eloundou_score: number;
   eloundou_available: boolean;
   aioe_raw: number | null;
@@ -63,6 +64,7 @@ export interface DataSources {
   aioe_available: boolean;
   task_exposure: number | null;
   tasks_analyzed: number;
+  matched_tasks: string[];
   company_modifier: number;
   ai_usage_modifier: number;
   bls_employment_national: number | null;
@@ -73,7 +75,7 @@ export interface DataSources {
 export interface EstimateResponse {
   years: number;
   risk: string;
-  description: string;
+  description?: string | null;
   factors: Factor[];
   tips: Tip[];
   occupation?: OccupationMatch | null;

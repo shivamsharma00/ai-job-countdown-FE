@@ -24,7 +24,8 @@ function factorColor(name: string, value: number): string {
   return value > 60 ? "var(--green)" : value > 35 ? "var(--yellow)" : "var(--red)";
 }
 
-function fmtPct(v: number) {
+function fmtPct(v: number | null | undefined) {
+  if (v == null) return "N/A";
   return `${Math.round(v * 100)}%`;
 }
 
@@ -57,6 +58,7 @@ const Results: React.FC<Props> = ({ profile, estimate, onRestart }) => {
   const [displayYears, setDisplayYears] = useState(0);
   const [barsAnimated, setBarsAnimated] = useState(false);
   const [calState, setCalState] = useState<"idle" | "adding" | "done">("idle");
+  const [showCheckin, setShowCheckin] = useState(true);
   const ringRef = useRef<SVGCircleElement>(null);
 
   const [countdown, setCountdown] = useState({
@@ -142,12 +144,13 @@ const Results: React.FC<Props> = ({ profile, estimate, onRestart }) => {
     else navigator.clipboard.writeText(txt);
   };
 
-  const co = profile.companyName || profile.companySize;
+  const co  = profile.companyName || profile.companySize;
   const ds  = estimate.data_sources;
   const occ = estimate.occupation;
 
   return (
-    <div style={{ animation: "fadeUp 0.7s ease-out" }}>
+    <div style={{ animation: "fadeUp 0.7s ease-out", position: "relative" }}>
+
 
       {/* ── Clock Card ── */}
       <div className={styles.clockCard}>
@@ -201,28 +204,179 @@ const Results: React.FC<Props> = ({ profile, estimate, onRestart }) => {
               <span className={styles.riskDot} style={{ background: color }} />
               <span style={{ color }}>{estimate.risk} risk</span>
             </div>
-            <p className={styles.clockDesc}>{estimate.description}</p>
+            {estimate.description && (
+              <p className={styles.clockDesc}>{estimate.description}</p>
+            )}
           </div>
         </div>
       </div>
 
-      {/* ── Calendar CTA ── */}
-      <div className={styles.calCta}>
-        <div className={styles.calIcon}>📅</div>
-        <div className={styles.calInfo}>
-          <h3>Set your "AI Check-in" reminder</h3>
-          <p>Add a yearly reminder to reassess your risk. First check-in: 1 year from now. Target: {new Date().getFullYear() + estimate.years}.</p>
+      {/* ── Research Behind This Score ── */}
+      {(ds || occ) && (
+        <div className={styles.methodCard}>
+          <div className={styles.gradient} />
+          <div className={styles.cardTitle}>Research behind AI Automating Jobs</div>
+          <p className={styles.methodIntro}>
+            Below score is calculated deterministically from three peer-reviewed research datasets —
+            no AI guesswork involved. Each paper approached job automation from a different angle.
+          </p>
+
+          {/* ── 3 Research Paper Cards ── */}
+          {ds && (
+            <div className={styles.researchGrid}>
+
+              {/* Eloundou et al. */}
+              <div className={styles.researchCard}>
+                <div className={styles.researchCardHeader}>
+                  <div className={styles.researchMeta}>
+                    <span className={styles.researchAuthors}>Eloundou, Manning, Mishkin & Rock</span>
+                    <span className={styles.researchYear}>2023</span>
+                  </div>
+                  <div className={styles.researchScore} style={{ color: "var(--blue)" }}>
+                    {fmtPct(ds.eloundou_score)}
+                  </div>
+                </div>
+                <div className={styles.researchTitle}>"GPTs are GPTs"</div>
+                <p className={styles.researchDesc}>
+                  OpenAI researchers had both humans and GPT-4 look at every US job's tasks and ask:
+                  "Can AI do this directly, or with tools?" The higher the score, the more of your
+                  daily work can already be handed off to today's AI — no future breakthroughs needed.
+                </p>
+                <div className={styles.researchFooter}>
+                  <span
+                    className={styles.researchBadge}
+                    style={{
+                      background: ds.eloundou_available ? "rgba(0,230,118,0.12)" : "rgba(255,255,255,0.06)",
+                      color: ds.eloundou_available ? "var(--green)" : "var(--text-dim)",
+                    }}
+                  >
+                    {ds.eloundou_available ? "matched" : "estimated"}
+                  </span>
+                  {ds.eloundou_alpha != null && (
+                    <span className={styles.researchFormula}>
+                      α={fmtNum(ds.eloundou_alpha)} + 0.5×β={fmtNum(ds.eloundou_beta)}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Felten / Raj / Seamans */}
+              <div className={styles.researchCard}>
+                <div className={styles.researchCardHeader}>
+                  <div className={styles.researchMeta}>
+                    <span className={styles.researchAuthors}>Felten, Raj & Seamans</span>
+                    <span className={styles.researchYear}>2023</span>
+                  </div>
+                  <div className={styles.researchScore} style={{ color }}>
+                    {fmtPct(ds.aioe_normalized)}
+                  </div>
+                </div>
+                <div className={styles.researchTitle}>AI Occupational Exposure (AIOE)</div>
+                <p className={styles.researchDesc}>
+                  Economists identified 10 distinct AI skills — things like image recognition,
+                  language understanding, and translation — then checked how much each job actually
+                  needs those skills day-to-day. Jobs that rely on abilities AI is already mastering
+                  score higher.
+                </p>
+                <div className={styles.researchFooter}>
+                  <span
+                    className={styles.researchBadge}
+                    style={{
+                      background: ds.aioe_available ? "rgba(0,230,118,0.12)" : "rgba(255,255,255,0.06)",
+                      color: ds.aioe_available ? "var(--green)" : "var(--text-dim)",
+                    }}
+                  >
+                    {ds.aioe_available ? "matched" : "estimated"}
+                  </span>
+                  {ds.aioe_raw != null && (
+                    <span className={styles.researchFormula}>
+                      z-score {fmtNum(ds.aioe_raw)} → normalised {fmtPct(ds.aioe_normalized)}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* O*NET Task-level */}
+              <div className={styles.researchCard}>
+                <div className={styles.researchCardHeader}>
+                  <div className={styles.researchMeta}>
+                    <span className={styles.researchAuthors}>O*NET 30.0 + AIOE Penetration</span>
+                    <span className={styles.researchYear}>2024</span>
+                  </div>
+                  <div className={styles.researchScore} style={{ color }}>
+                    {ds.task_exposure != null ? fmtPct(ds.task_exposure) : "—"}
+                  </div>
+                </div>
+                <div className={styles.researchTitle}>Task-Level Analysis</div>
+                <p className={styles.researchDesc}>
+                  The US Department of Labor's O*NET database lists every task in your occupation,
+                  each rated for importance (1–5). We score each task for AI automation potential,
+                  then average them — so tasks you do all day count far more than occasional ones.
+                </p>
+                <div className={styles.researchFooter}>
+                  <span
+                    className={styles.researchBadge}
+                    style={{
+                      background: ds.tasks_analyzed > 0 ? "rgba(0,230,118,0.12)" : "rgba(255,255,255,0.06)",
+                      color: ds.tasks_analyzed > 0 ? "var(--green)" : "var(--text-dim)",
+                    }}
+                  >
+                    {ds.tasks_analyzed > 0 ? `${ds.tasks_analyzed} tasks` : "estimated"}
+                  </span>
+                </div>
+              </div>
+
+            </div>
+          )}
+
+          {/* ── Matched occupation ── */}
+          {occ && (
+            <div className={styles.methodOcc}>
+              <span className={styles.methodOccLabel}>Matched occupation</span>
+              <span className={styles.methodOccTitle}>{occ.title}</span>
+              <span className={styles.methodOccSoc}>SOC {occ.soc_code}</span>
+            </div>
+          )}
+
+          {/* ── Matched O*NET Tasks ── */}
+          {ds && ds.matched_tasks && ds.matched_tasks.length > 0 && (
+            <div className={styles.matchedTasksBox}>
+              <div className={styles.matchedTasksTitle}>O*NET tasks matched to this occupation</div>
+              <ul className={styles.matchedTasksList}>
+                {ds.matched_tasks.map((task, i) => (
+                  <li key={i} className={styles.matchedTaskItem}>{task}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* ── BLS context (only if data available) ── */}
+          {ds && (ds.bls_employment_national || ds.bls_median_wage_national) && (
+            <div className={styles.blsRow}>
+              <span className={styles.blsLabel}>National employment context</span>
+              {ds.bls_employment_national && (
+                <span className={styles.blsStat}>
+                  {fmtEmployment(ds.bls_employment_national)} workers nationally
+                </span>
+              )}
+              {ds.bls_median_wage_national && (
+                <span className={styles.blsStat}>
+                  Median wage: {fmtSalary(ds.bls_median_wage_national)}/yr
+                </span>
+              )}
+              <span className={styles.blsSource}>BLS OEWS 2024</span>
+            </div>
+          )}
+
+          <div className={styles.methodCitation}>
+            Sources: O*NET 30.0 (U.S. DOL) · Eloundou et al. (2023) "GPTs are GPTs" ·
+            Felten/Raj/Seamans AIOE Index · BLS OEWS (2024)
+          </div>
         </div>
-        <button
-          className={`${styles.calBtn} ${calState === "done" ? styles.calDone : ""}`}
-          disabled={calState !== "idle"} onClick={handleCalendar}
-        >
-          {calState === "idle" ? "Add to Calendar" : calState === "adding" ? "Adding…" : "Downloaded .ics"}
-        </button>
-      </div>
+      )}
 
       {/* ── Factors + Tips side by side ── */}
-      <div className={styles.twoCol}>
+      <div className={estimate.tips.length > 0 ? styles.twoCol : ""}>
         <div className={styles.card}>
           <div className={styles.cardTitle}>Vulnerability Breakdown</div>
           {estimate.factors.map((f) => {
@@ -241,157 +395,18 @@ const Results: React.FC<Props> = ({ profile, estimate, onRestart }) => {
           })}
         </div>
 
-        <div className={styles.card}>
-          <div className={styles.cardTitle}>Survival Guide</div>
-          {estimate.tips.map((t, i) => (
-            <div key={i} className={styles.tipRow}>
-              <div className={styles.tipIco}>{t.icon}</div>
-              <div className={styles.tipBody}><strong>{t.title}.</strong> {t.text}</div>
-            </div>
-          ))}
-        </div>
+        {estimate.tips.length > 0 && (
+          <div className={styles.card}>
+            <div className={styles.cardTitle}>Survival Guide</div>
+            {estimate.tips.map((t, i) => (
+              <div key={i} className={styles.tipRow}>
+                <div className={styles.tipIco}>{t.icon}</div>
+                <div className={styles.tipBody}><strong>{t.title}.</strong> {t.text}</div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
-
-      {/* ── Data Sources & Methodology ── */}
-      {(ds || occ) && (
-        <div className={styles.methodCard}>
-          <div className={styles.cardTitle}>How This Score Was Computed</div>
-          <p className={styles.methodIntro}>
-            Scores are calculated deterministically from three published research datasets —
-            no AI guesswork for the numbers. Claude only wrote the description and tips above.
-          </p>
-
-          {occ && (
-            <div className={styles.methodOcc}>
-              <span className={styles.methodOccLabel}>Matched occupation</span>
-              <span className={styles.methodOccTitle}>{occ.title}</span>
-              <span className={styles.methodOccSoc}>SOC {occ.soc_code}</span>
-            </div>
-          )}
-
-          <div className={styles.methodGrid}>
-
-            {/* Eloundou */}
-            <div className={styles.methodItem}>
-              <div className={styles.methodItemHeader}>
-                <span className={styles.methodSource}>Eloundou et al. 2023</span>
-                <span
-                  className={styles.methodBadge}
-                  style={{ background: ds?.eloundou_available ? "rgba(0,230,118,0.12)" : "rgba(255,255,255,0.06)", color: ds?.eloundou_available ? "var(--green)" : "var(--text-dim)" }}
-                >
-                  {ds?.eloundou_available ? "matched" : "fallback"}
-                </span>
-              </div>
-              <div className={styles.methodLabel}>"GPTs are GPTs" GPT-exposure</div>
-              <div className={styles.methodValue} style={{ color }}>
-                {ds?.eloundou_score != null ? fmtPct(ds.eloundou_score) : "N/A"}
-              </div>
-              {ds?.eloundou_alpha != null && (
-                <div className={styles.methodFormula}>
-                  α={fmtNum(ds.eloundou_alpha)} + 0.5×β={fmtNum(ds.eloundou_beta)} = {fmtNum(ds.eloundou_score)}
-                </div>
-              )}
-              <div className={styles.methodDesc}>
-                Share of tasks directly automatable (α) or automatable with tooling (β).
-                Higher = more exposed.
-              </div>
-            </div>
-
-            {/* AIOE */}
-            <div className={styles.methodItem}>
-              <div className={styles.methodItemHeader}>
-                <span className={styles.methodSource}>Felten / Raj / Seamans</span>
-                <span
-                  className={styles.methodBadge}
-                  style={{ background: ds?.aioe_available ? "rgba(0,230,118,0.12)" : "rgba(255,255,255,0.06)", color: ds?.aioe_available ? "var(--green)" : "var(--text-dim)" }}
-                >
-                  {ds?.aioe_available ? "matched" : "fallback"}
-                </span>
-              </div>
-              <div className={styles.methodLabel}>AI Occupational Exposure (AIOE)</div>
-              <div className={styles.methodValue} style={{ color }}>
-                {ds?.aioe_raw != null ? ds.aioe_raw.toFixed(2) : "N/A"}
-                <span className={styles.methodUnit}> (z-score)</span>
-              </div>
-              <div className={styles.methodDesc}>
-                Composite z-score mapping 10 AI capabilities to O*NET ability requirements.
-                Normalized to {ds?.aioe_normalized != null ? fmtPct(ds.aioe_normalized) : "N/A"} for this calculation.
-              </div>
-            </div>
-
-            {/* O*NET tasks */}
-            <div className={styles.methodItem}>
-              <div className={styles.methodItemHeader}>
-                <span className={styles.methodSource}>O*NET 30.0 + AIOE Penetration</span>
-                <span
-                  className={styles.methodBadge}
-                  style={{ background: ds && ds.tasks_analyzed > 0 ? "rgba(0,230,118,0.12)" : "rgba(255,255,255,0.06)", color: ds && ds.tasks_analyzed > 0 ? "var(--green)" : "var(--text-dim)" }}
-                >
-                  {ds && ds.tasks_analyzed > 0 ? `${ds.tasks_analyzed} tasks` : "heuristic"}
-                </span>
-              </div>
-              <div className={styles.methodLabel}>Importance-weighted task exposure</div>
-              <div className={styles.methodValue} style={{ color }}>
-                {ds?.task_exposure != null ? fmtPct(ds.task_exposure) : "N/A"}
-              </div>
-              <div className={styles.methodDesc}>
-                Each O*NET task weighted by its importance rating (1–5), then scored against
-                AIOE task-penetration data.
-              </div>
-            </div>
-
-            {/* BLS */}
-            <div className={styles.methodItem}>
-              <div className={styles.methodItemHeader}>
-                <span className={styles.methodSource}>BLS OEWS</span>
-                <span
-                  className={styles.methodBadge}
-                  style={{ background: ds?.bls_employment_national ? "rgba(0,230,118,0.12)" : "rgba(255,255,255,0.06)", color: ds?.bls_employment_national ? "var(--green)" : "var(--text-dim)" }}
-                >
-                  {ds?.bls_employment_national ? "matched" : "not available"}
-                </span>
-              </div>
-              <div className={styles.methodLabel}>National employment context</div>
-              <div className={styles.methodValue} style={{ color: "var(--text)" }}>
-                {fmtEmployment(ds?.bls_employment_national) ?? "—"}
-              </div>
-              {ds?.bls_median_wage_national && (
-                <div className={styles.methodFormula}>
-                  Median wage: {fmtSalary(ds.bls_median_wage_national)}/yr
-                </div>
-              )}
-              <div className={styles.methodDesc}>
-                Bureau of Labor Statistics Occupational Employment & Wage Statistics.
-              </div>
-            </div>
-
-          </div>
-
-          {/* Final formula */}
-          {ds && (
-            <div className={styles.methodFormulaBox}>
-              <div className={styles.methodFormulaTitle}>Final exposure formula</div>
-              <div className={styles.methodFormulaBody}>
-                base = 0.40 × {fmtNum(ds.eloundou_score)} (Eloundou)
-                {" "}+ 0.30 × {fmtNum(ds.aioe_normalized)} (AIOE)
-                {" "}+ 0.30 × {ds.task_exposure != null ? fmtNum(ds.task_exposure) : "0.60"} (tasks)
-                <br />
-                final = base + company_modifier({ds.company_modifier > 0 ? "+" : ""}{ds.company_modifier.toFixed(3)})
-                {" "}+ ai_modifier({ds.ai_usage_modifier > 0 ? "+" : ""}{ds.ai_usage_modifier.toFixed(3)})
-                {" "}= <strong style={{ color }}>{fmtNum(ds.final_exposure)}</strong>
-                <br />
-                years = round(30 × (1 − {fmtNum(ds.final_exposure)})^1.5)
-                {" "}= <strong style={{ color }}>{estimate.years}</strong>
-              </div>
-            </div>
-          )}
-
-          <div className={styles.methodCitation}>
-            Sources: O*NET 30.0 (U.S. DOL) · Eloundou et al. (2023) "GPTs are GPTs" ·
-            Felten/Raj/Seamans AIOE Index · BLS OEWS (2024)
-          </div>
-        </div>
-      )}
 
       {/* ── Share / Restart ── */}
       <div style={{ textAlign: "center", padding: "32px 0" }}>

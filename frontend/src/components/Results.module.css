@@ -108,66 +108,105 @@
   line-height: 1.7;
 }
 
-/* Calendar CTA */
-.calCta {
+/* ── Floating AI Check-in Overlay ── */
+.checkinOverlay {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 28px 32px;
-  margin-bottom: 24px;
+  padding: 14px 16px;
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 10px;
+  max-width: 320px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  animation: slideInLeft 0.4s ease-out;
 }
-.calIcon {
-  width: 52px;
-  height: 52px;
-  background: var(--accent-soft);
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  flex-shrink: 0;
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
 }
-.calInfo {
-  flex: 1;
-}
-.calInfo h3 {
-  font-size: 15px;
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-.calInfo p {
-  font-size: 12px;
+
+.checkinClose {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  background: none;
+  border: none;
   color: var(--text-dim);
-  line-height: 1.5;
+  font-size: 18px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  font-family: "DM Sans", sans-serif;
 }
-.calBtn {
+.checkinClose:hover { color: var(--text); }
+
+.checkinIcon {
+  font-size: 22px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.checkinBody {
+  flex: 1;
+  min-width: 0;
+  padding-right: 16px;
+}
+
+.checkinTitle {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 2px;
+  line-height: 1.3;
+}
+
+.checkinSub {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: "Space Mono", monospace;
+}
+
+.checkinBtn {
   background: var(--accent);
   color: #fff;
   border: none;
   border-radius: var(--radius-sm);
-  padding: 12px 22px;
-  font-size: 13px;
+  padding: 8px 14px;
+  font-size: 11px;
   font-weight: 600;
   cursor: pointer;
   font-family: "DM Sans", sans-serif;
   transition: all 0.25s ease;
   white-space: nowrap;
+  flex-shrink: 0;
 }
-.calBtn:hover {
-  box-shadow: 0 8px 24px rgba(255, 61, 0, 0.3);
+.checkinBtn:hover {
+  box-shadow: 0 4px 16px rgba(255, 61, 0, 0.3);
   transform: translateY(-1px);
 }
-.calBtn:disabled {
-  opacity: 0.5;
+.checkinBtn:disabled {
+  opacity: 0.6;
   cursor: not-allowed;
   transform: none;
-  box-shadow: none;
 }
+
 .calDone {
   background: var(--green) !important;
+}
+
+@media (max-width: 480px) {
+  .checkinOverlay {
+    left: 12px;
+    right: 12px;
+    max-width: none;
+    top: 12px;
+  }
 }
 
 /* Two-column grid for factors + tips */
@@ -195,7 +234,7 @@
 }
 .cardTitle {
   font-family: "Space Mono", monospace;
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 3px;
   text-transform: uppercase;
   color: var(--text-dim);
@@ -403,10 +442,121 @@
   border-radius: var(--radius);
   padding: 32px;
   margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Research Paper Cards ── */
+.researchGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 900px) {
+  .researchGrid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 600px) {
+  .researchGrid { grid-template-columns: 1fr; }
+}
+
+.researchCard {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.researchCardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.researchMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.researchAuthors {
+  font-family: "Space Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.researchYear {
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  color: var(--text-dim);
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 1px 7px;
+  width: fit-content;
+}
+
+.researchScore {
+  font-family: "Space Mono", monospace;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.researchTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  font-style: italic;
+}
+
+.researchDesc {
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1.6;
+  margin: 0;
+  flex: 1;
+}
+
+.researchFooter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+  margin-top: 4px;
+}
+
+.researchBadge {
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 100px;
+  white-space: nowrap;
+}
+
+.researchFormula {
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  color: var(--text-dim);
+  word-break: break-all;
 }
 
 .methodIntro {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--text-dim);
   line-height: 1.6;
   margin: 0 0 24px;
@@ -424,131 +574,103 @@
 }
 .methodOccLabel {
   font-family: "Space Mono", monospace;
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--text-dim);
 }
 .methodOccTitle {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--text);
 }
 .methodOccSoc {
   font-family: "Space Mono", monospace;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-dim);
   padding: 3px 10px;
   border: 1px solid var(--border);
   border-radius: 100px;
 }
 
-.methodGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-@media (max-width: 800px) {
-  .methodGrid { grid-template-columns: 1fr; }
-}
-
-.methodItem {
+/* ── Matched O*NET Tasks ── */
+.matchedTasksBox {
   background: var(--surface-2);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  padding: 18px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
 }
 
-.methodItemHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 8px;
-  gap: 8px;
-}
-
-.methodSource {
-  font-family: "Space Mono", monospace;
-  font-size: 9px;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--text-dim);
-}
-
-.methodBadge {
-  font-family: "Space Mono", monospace;
-  font-size: 9px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  padding: 2px 8px;
-  border-radius: 100px;
-  white-space: nowrap;
-}
-
-.methodLabel {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-dim);
-  margin-bottom: 6px;
-}
-
-.methodValue {
-  font-family: "Space Mono", monospace;
-  font-size: 22px;
-  font-weight: 700;
-  line-height: 1;
-  margin-bottom: 6px;
-}
-
-.methodUnit {
-  font-size: 12px;
-  font-weight: 400;
-  color: var(--text-dim);
-}
-
-.methodFormula {
-  font-family: "Space Mono", monospace;
-  font-size: 10px;
-  color: var(--text-dim);
-  margin-bottom: 6px;
-  word-break: break-all;
-}
-
-.methodDesc {
-  font-size: 11px;
-  color: var(--text-dim);
-  line-height: 1.5;
-}
-
-.methodFormulaBox {
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 18px 20px;
-  margin-bottom: 20px;
-}
-
-.methodFormulaTitle {
+.matchedTasksTitle {
   font-family: "Space Mono", monospace;
   font-size: 10px;
   letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--text-dim);
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
-.methodFormulaBody {
-  font-family: "Space Mono", monospace;
-  font-size: 11px;
+.matchedTasksList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.matchedTaskItem {
+  font-size: 13px;
   color: var(--text-dim);
-  line-height: 1.8;
-  word-break: break-word;
+  padding-left: 16px;
+  position: relative;
+  line-height: 1.5;
+}
+
+.matchedTaskItem::before {
+  content: "·";
+  position: absolute;
+  left: 4px;
+  color: var(--accent);
+}
+
+/* ── BLS Row ── */
+.blsRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.blsLabel {
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.blsStat {
+  font-size: 13px;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.blsSource {
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-left: auto;
 }
 
 .methodCitation {
-  font-size: 10px;
+  font-size: 11px;
   color: var(--text-dim);
   opacity: 0.6;
   font-family: "Space Mono", monospace;
@@ -630,13 +752,6 @@
   .card,
   .feedCard {
     padding: 24px 18px;
-  }
-  .calCta {
-    flex-direction: column;
-    text-align: center;
-  }
-  .calBtn {
-    width: 100%;
   }
 }
 
