@@ -57,8 +57,6 @@ interface Props {
 const Results: React.FC<Props> = ({ profile, estimate, onRestart }) => {
   const [displayYears, setDisplayYears] = useState(0);
   const [barsAnimated, setBarsAnimated] = useState(false);
-  const [calState, setCalState] = useState<"idle" | "adding" | "done">("idle");
-  const [showCheckin, setShowCheckin] = useState(true);
   const ringRef = useRef<SVGCircleElement>(null);
 
   const [countdown, setCountdown] = useState({
@@ -117,25 +115,6 @@ const Results: React.FC<Props> = ({ profile, estimate, onRestart }) => {
     return () => clearInterval(iv);
   }, [estimate.years]);
 
-  // Calendar
-  const handleCalendar = () => {
-    setCalState("adding");
-    const start = new Date(new Date().getFullYear() + 1, new Date().getMonth(), new Date().getDate());
-    const ds = start.toISOString().slice(0, 10).replace(/-/g, "");
-    const ics = [
-      "BEGIN:VCALENDAR", "VERSION:2.0", "BEGIN:VEVENT",
-      `DTSTART;VALUE=DATE:${ds}`, `DTEND;VALUE=DATE:${ds}`,
-      "RRULE:FREQ=YEARLY;COUNT=5",
-      `SUMMARY:AI Job Countdown Check-in: ${profile.role}`,
-      `DESCRIPTION:Annual reminder to reassess AI exposure for ${profile.role} in ${profile.location}. Original estimate: ${estimate.years} years.`,
-      "END:VEVENT", "END:VCALENDAR",
-    ].join("\n");
-    const a = document.createElement("a");
-    const url = URL.createObjectURL(new Blob([ics], { type: "text/calendar" }));
-    a.href = url; a.download = "ai-checkin.ics"; a.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-    setCalState("done");
-  };
 
   // Share
   const handleShare = () => {
